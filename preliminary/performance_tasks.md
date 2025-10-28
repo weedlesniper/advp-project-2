@@ -34,22 +34,21 @@ Complete the steps below and fill in the `> block` sections
 3. Activate the `venv` as instructed by `uv`
 4. In order to complete the project, we need to install OpenCV. Fill in the following:
   - What role does OpenCV have in this project?
-  >
+  > python computer vision/ML library
   - What is the `uv pip` command to install OpenCV?
-  > `uv pip install ????`
+  > `uv pip install opencv-python`
   - What is the URL of this library's git repo?
-  > [Insert URL Here](https://github.com/opencv/????-?????)
+  > [Insert URL Here](https://github.com/opencv/opencv)
 5. Add OpenCV to your project using the `uv add` command:
-  > `uv add name-of-open-cv-library
-
+  > `uv add opencv-python
 6. Have the dependencies in the `pyproject.toml` changed? If so, how?
-  >
+  > dependencies now show open cv
   >
 7. Why did we use `uv add` over `uv pip`?
-  >
-  >
+  > uv add locks dependencies across platform to specific library versions whereas uv pip while try to use
+  > the latest version of packages https://github.com/astral-sh/uv/issues/9219
 8. The `numpy` library is required for OpenCV. Should you add an explicit requirement for it? Why/Why not?
-  >
+  > I think not, seeing as if you add OpenCV it should install itself 
   >
 9. Commit the changes so far to git. Use the message `chore: add OpenCV dependency`
 10. Go to `preliminary/library_basics.py` and complete the required functionality.
