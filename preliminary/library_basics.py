@@ -13,24 +13,25 @@ Make sure you read the docstrings C.A.R.E.F.U.L.Y (yes, I took the L to check th
 
 # imports - add all required imports here
 from pathlib import Path
-import cv2
+import cv2, os
 import numpy as np
+from PIL import Image
+    
 
-
-VID_PATH = Path("resources/name-of-vid-given-to-you-by-instructor.mp4")
+VID_PATH = Path("resources/oop.mp4")
 
 class CodingVideo:
     capture: cv2.VideoCapture
 
 
     def __init__(self, video: Path | str):
-        self.capture = ... # You complete me!
+        self.capture = cv2.VideoCapture(str(video))
         if not self.capture.isOpened():
             raise ValueError(f"Cannot open {video}")
 
-        self.fps = ...
-        self.frame_count = ...
-        self.duration = ...
+        self.fps = self.capture.get(cv2.CAP_PROP_FPS)
+        self.frame_count = self.capture.get(cv2.CAP_PROP_FRAME_COUNT)
+        self.duration: float = (self.frame_count / self.fps) if self.fps > 0 else 0.0
 
 
     def __str__(self) -> str:
@@ -45,11 +46,18 @@ class CodingVideo:
         ----------
         https://docs.opencv.org/3.4/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d
         """
+        return (f'FPS: {self.fps} \n') +(f'Frame Count: {self.frame_count}\n') + (f'Duration: {self.duration}\n')
+
 
     def get_frame_number_at_time(self, seconds: int) -> int:
         """Given a time in seconds, returns the value of the nearest frame"""
-
-
+        #get an approximate index based on seconds
+        idx = int(round(float(seconds) * self.fps))
+        #non 0 frame count
+        if self.frame_count > 0:
+            idx = max(0, min(idx, self.frame_count - 1)) 
+        return idx
+    
     def get_frame_rgb_array(self, frame_number: int) -> np.ndarray:
         """Returns a numpy N-dimensional array (ndarray)
 
@@ -73,21 +81,22 @@ class CodingVideo:
             raise ValueError("Failed to encode frame")
         return buf.tobytes()
 
+    def save_as_image(self, seconds: int, output_path: Path | str = 'resources/output.png') -> None:
+      """Saves the given frame as a png image"""
+      png_bytes = self.get_image_as_bytes(seconds)
+      if not png_bytes:
+        raise ValueError(f"Could not obtain image bytes at {seconds}s")
 
+      out = Path(output_path)
+      out.parent.mkdir(parents=True, exist_ok=True)
+      with open(out, "wb") as f:
+          f.write(png_bytes)
 
-
-    def save_as_image(self, seconds: int, output_path: Path | str = 'output.png') -> None:
-      """Saves the given frame as a png image
-
-      # TODO: Requires a third-party library to convert ndarray to png
-      # TODO: Identify the library and add a reference to its documentation
-
-
-      """
 def test():
     """Try out your class here"""
     oop = CodingVideo("resources/oop.mp4")
     print(oop)
+    oop.get_image_as_bytes(42)
     oop.save_as_image(42)
 
 if __name__ == '__main__':
