@@ -1,4 +1,5 @@
 # Overview
+
 This section contains preliminary familiarisation steps with the core libraries of the project. It is also designed to complement (and satisfy) the performance requirements of the preliminary assessment.
 
 ## Required performance demonstration
@@ -7,7 +8,6 @@ You must demonstrate your ability at:
 
 - Determining an organisation’s technology, development tools, and UI platform
 - Enabling interprocess communication in Python while using third-party libraries and referencing third-party documentation
-
 
 ## Instructions
 
@@ -19,41 +19,39 @@ You must demonstrate your ability at:
 6. Follow the steps in the remainder of the guide insuring your commit to git whenever prompted
 7. Submit a `zip` of this repository along with the `.git` folder. **Do not include your `venv/`**. Ensure your submission includes the assessment Word document with all of the questions in it attempted.
 
-
 ## Steps
-Complete the steps below and fill in the `> block` sections
-> If you see a section like this, fill it in!
 
+Complete the steps below and fill in the `> block` sections
+
+> If you see a section like this, fill it in!
 
 ### Installing and running OpenCV
 
 1. Examine the `pyproject.toml` what dependencies does it currently identify?
->
->
+   >
 2. Create a `.venv` in this folder using `uv venv`
 3. Activate the `venv` as instructed by `uv`
 4. In order to complete the project, we need to install OpenCV. Fill in the following:
-  - What role does OpenCV have in this project?
+
+- What role does OpenCV have in this project?
   > python computer vision/ML library
-  - What is the `uv pip` command to install OpenCV?
+- What is the `uv pip` command to install OpenCV?
   > `uv pip install opencv-python`
-  - What is the URL of this library's git repo?
+- What is the URL of this library's git repo?
   > [Insert URL Here](https://github.com/opencv/opencv)
+
 5. Add OpenCV to your project using the `uv add` command:
-  > `uv add opencv-python
+   > `uv add opencv-python
 6. Have the dependencies in the `pyproject.toml` changed? If so, how?
-  > dependencies now show open cv
-  >
+   > dependencies now show open cv
 7. Why did we use `uv add` over `uv pip`?
-  > uv add locks dependencies across platform to specific library versions whereas uv pip while try to use
-  > the latest version of packages https://github.com/astral-sh/uv/issues/9219
+   > uv add locks dependencies across platform to specific library versions whereas uv pip while try to use
+   > the latest version of packages https://github.com/astral-sh/uv/issues/9219
 8. The `numpy` library is required for OpenCV. Should you add an explicit requirement for it? Why/Why not?
-  > I think not, seeing as if you add OpenCV it should install itself 
-  >
+   > I think not, seeing as if you add OpenCV it should install itself
 9. Commit the changes so far to git. Use the message `chore: add OpenCV dependency`
 10. Go to `preliminary/library_basics.py` and complete the required functionality.
 11. Commit your changes with `feat: save video frames`
-
 
 ### Installing and running Tesseract
 
@@ -64,13 +62,21 @@ Tesseract consists of both an OCR Engine and a command line program. It is predo
 1. Examine the [Readme](https://github.com/tesseract-ocr/tesseract?tab=readme-ov-file) and find a list of Python wrappers.
 
 2. What is the URL that lists Python wrappers for Tesseract?
-  > <url-here>
+
+   > https://tesseract-ocr.github.io/tessdoc/AddOns#tesseract-wrappers
 
 3. Select a Python wrapper. What wrapper did you choose and why? Ensure you address each element below in your answer
-> name of the python library
-> how long ago was a commit made to the library
-> does it have external dependencies
-> how does it suite the project requirements
+
+   > name of the python library
+   > pytesseract
+   > how long ago was a commit made to the library
+   > Aug 16,2024
+   > does it have external dependencies
+   > Python-tesseract requires Python 3.6+
+   > You will need the Python Imaging Library (PIL) (or the Pillow fork). Please check the Pillow documentation to know the basic Pillow installation.
+   > Install Google Tesseract OCR (additional info how to install the engine on Linux, Mac OSX and Windows). You must be able to invoke the tesseract command as tesseract. If this isn’t the case, for example because tesseract isn’t in your PATH, you will have to change the “tesseract_cmd” variable pytesseract.pytesseract.tesseract_cmd. Under Debian/Ubuntu you can use the package tesseract-ocr. For Mac OS users. please install homebrew package tesseract.
+   > how does it suite the project requirements
+   > pytesseract works directly with openCv frames, so i can grab the frame and OCR it in a few lines
 
 4. Use UV to add the dependency to your project and your `pyproject.toml`
 
@@ -82,24 +88,21 @@ Tesseract consists of both an OCR Engine and a command line program. It is predo
 
 8. Commit the changes as `feat: OCR an image
 
-
 ### Install and run FastAPI
 
 FastAPI will allow us to enable communication with our OCR service from other processes on the current machine or across a network.
 
 1. Add the requirement for FastAPI using UV. FastAPI has optional requirements so the command is a little different:
-`uv add fastapi --extra standard`
+   `uv add fastapi --extra standard`
 2. Commit the new dependency `chore: add FastAPI dependency`
 3. Run in development mode using:
-`uv run fastapi dev preliminary/simple_api.py`
+   `uv run fastapi dev preliminary/simple_api.py`
 4. Run the following curl command (may require git bash on Windows):
-`curl 127.0.0.1:8000/video`
+   `curl 127.0.0.1:8000/video`
 5. Confirm that a list of videos and URLs is returned by copying the output below:
-> Description
+   > Description
 6. What are the names of the two processes that just communicated?
->
-6. Modify the simple_api.py so that it works correctly with your implementation and complete any TODO markers
-7. Demonstrate the use of at least two other end points below:
->
->
->
+   >
+7. Modify the simple_api.py so that it works correctly with your implementation and complete any TODO markers
+8. Demonstrate the use of at least two other end points below:
+   >

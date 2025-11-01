@@ -16,7 +16,9 @@ from pathlib import Path
 import cv2, os
 import numpy as np
 from PIL import Image
-    
+import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
 
 VID_PATH = Path("resources/oop.mp4")
 
@@ -72,10 +74,25 @@ class CodingVideo:
 
         Reference
         ---------
-        # TODO: Find a tutorial on OpenCV that demonstrates color space conversion
+        https://docs.opencv.org/3.4/d8/d01/group__imgproc__color__conversions.html
 
         """
+        self.capture.set(cv2.CAP_PROP_POS_FRAMES, int(frame_number))
+        ok, frame_bgr = self.capture.read()
+        if not ok or frame_bgr is None:
+            raise ValueError(f"Invalid frame at frame num {frame_number} ")
+        frame_rgb = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+        return frame_rgb
+    
+    def get_text_from_frame_at_time(self, seconds: int):
+        if self.fps <= 0:
+            raise ValueError("FPS is zero; cannot map time to frame.")
 
+        frame_idx = self.get_frame_number_at_time(seconds)
+        frame_rgb = self.get_frame_rgb_array(frame_idx)
+        text = pytesseract.image_to_string(frame_rgb)
+        return text.strip()
+    
     def get_image_as_bytes(self, seconds: int) -> bytes:
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, self.get_frame_number_at_time(seconds))
         ok, frame = self.capture.read()
@@ -103,6 +120,7 @@ def test():
     print(coding_vid)
     coding_vid.get_image_as_bytes(42)
     coding_vid.save_as_image(42)
+    print(coding_vid.get_text_from_frame_at_time(42))
 
 if __name__ == '__main__':
     test()

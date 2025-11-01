@@ -10,4 +10,12 @@ Include a brief overview of the project, include:
 python -m venv .venv
 source .venv/Scripts/activate
 uv sync
+
+
+```
+
+pytesseract install
+
+```powershell
+winget install -e --id UB-Mannheim.TesseractOCR
 ```
