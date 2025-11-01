@@ -46,7 +46,12 @@ class CodingVideo:
         ----------
         https://docs.opencv.org/3.4/d4/d15/group__videoio__flags__base.html#gaeb8dd9c89c10a5c63c139bf7c4f5704d
         """
-        return (f'FPS: {self.fps} \n') +(f'Frame Count: {self.frame_count}\n') + (f'Duration: {self.duration}\n')
+        duration_minutes = 0
+        if self.fps > 0: 
+            duration_minutes = (self.frame_count / self.fps / 60)
+            
+
+        return (f'FPS: {self.fps:.2f} \n') + (f'Frame Count: {self.frame_count}\n') + (f"Duration: {duration_minutes:.2f} minutes \n")
 
 
     def get_frame_number_at_time(self, seconds: int) -> int:
@@ -94,10 +99,10 @@ class CodingVideo:
 
 def test():
     """Try out your class here"""
-    oop = CodingVideo("resources/oop.mp4")
-    print(oop)
-    oop.get_image_as_bytes(42)
-    oop.save_as_image(42)
+    coding_vid = CodingVideo("resources/oop.mp4")
+    print(coding_vid)
+    coding_vid.get_image_as_bytes(42)
+    coding_vid.save_as_image(42)
 
 if __name__ == '__main__':
     test()
