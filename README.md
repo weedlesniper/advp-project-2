@@ -16,6 +16,5 @@ uv sync
 
 pytesseract install
 
-```powershell
-winget install -e --id UB-Mannheim.TesseractOCR
-```
+
+
