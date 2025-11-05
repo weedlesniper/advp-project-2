@@ -25,7 +25,6 @@ VID_PATH = Path("resources/oop.mp4")
 class CodingVideo:
     capture: cv2.VideoCapture
 
-
     def __init__(self, video: Path | str):
         self.capture = cv2.VideoCapture(str(video))
         if not self.capture.isOpened():
@@ -85,15 +84,18 @@ class CodingVideo:
         return frame_rgb
     
     def get_text_from_frame_at_time(self, seconds: int):
+        """wrapper method that calls relevant functions, completing OCR pipeline from timestamp to output text"""
         if self.fps <= 0:
             raise ValueError("FPS is zero; cannot map time to frame.")
 
+        # get frame from time -> get rgb frame at time in video -> perform OCR
         frame_idx = self.get_frame_number_at_time(seconds)
         frame_rgb = self.get_frame_rgb_array(frame_idx)
         text = pytesseract.image_to_string(frame_rgb)
         return text.strip()
     
     def get_image_as_bytes(self, seconds: int) -> bytes:
+        """input timestamp, output a series of bytes representing the frame at that timestamp"""
         self.capture.set(cv2.CAP_PROP_POS_FRAMES, self.get_frame_number_at_time(seconds))
         ok, frame = self.capture.read()
         if not ok or frame is None:
@@ -115,11 +117,14 @@ class CodingVideo:
           f.write(png_bytes)
 
 def test():
-    """Try out your class here"""
     coding_vid = CodingVideo("resources/oop.mp4")
     print(coding_vid)
+    
+    #getting frame from video (no OCR)
     coding_vid.get_image_as_bytes(42)
     coding_vid.save_as_image(42)
+
+    # getting frame, and 'OCRing' it 
     print(coding_vid.get_text_from_frame_at_time(42))
 
 if __name__ == '__main__':
