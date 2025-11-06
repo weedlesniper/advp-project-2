@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.list-item {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  background: white;
+  color: black;
+}
+
+.list-item:hover {
+  background: #f5f5f5;
+}

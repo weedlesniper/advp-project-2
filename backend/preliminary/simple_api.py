@@ -9,9 +9,17 @@ from fastapi import Response
 from pydantic import BaseModel
 from pathlib import Path
 from library_basics import CodingVideo
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 HERE = Path(__file__).resolve().parent          # .../preliminary
 ROOT = HERE.parent                               # repo root

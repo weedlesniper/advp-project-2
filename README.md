@@ -9,6 +9,7 @@ Include a brief overview of the project, include:
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate
+pip install uv #if you dont have uv, you can check with uv --version
 uv sync
 uv run fastapi dev preliminary/simple_api.py
 
