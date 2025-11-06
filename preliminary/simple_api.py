@@ -92,4 +92,21 @@ def video_frame(vid: str, t: float):
     finally:
       video.capture.release()
 
-# TODO: add enpoint to get ocr e.g. /video/{vid}/frame/{t}/ocr
+# Return OCR text for the frame at time `t` (seconds) from video `vid`.
+# curl 127.0.0.1:8000/video/demo/frame/42/ocr
+
+@app.get("/video/{vid}/frame/{t}/ocr")
+def video_frame_ocr(vid: str, t: float):
+    try:
+        video = _open_vid_or_404(vid)  # raises 404 via HTTPException if not found
+        text = video.get_text_from_frame_at_time(t)
+        return {"text": text}
+    except ValueError as e:
+        # if invalid timestamp/frame
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        try:
+            video.capture.release()
+        except Exception:
+            pass
+

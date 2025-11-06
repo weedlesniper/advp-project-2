@@ -10,11 +10,9 @@ Include a brief overview of the project, include:
 python -m venv .venv
 source .venv/Scripts/activate
 uv sync
+uv run fastapi dev preliminary/simple_api.py
 
 
 ```
 
 pytesseract install
-
-
-

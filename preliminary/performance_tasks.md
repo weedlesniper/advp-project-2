@@ -28,7 +28,7 @@ Complete the steps below and fill in the `> block` sections
 ### Installing and running OpenCV
 
 1. Examine the `pyproject.toml` what dependencies does it currently identify?
-   >
+   > Initially none (just project metadata).
 2. Create a `.venv` in this folder using `uv venv`
 3. Activate the `venv` as instructed by `uv`
 4. In order to complete the project, we need to install OpenCV. Fill in the following:
@@ -38,15 +38,15 @@ Complete the steps below and fill in the `> block` sections
 - What is the `uv pip` command to install OpenCV?
   > `uv pip install opencv-python`
 - What is the URL of this library's git repo?
-  > [Insert URL Here](https://github.com/opencv/opencv)
+  > [ https://github.com/opencv/opencv ]
 
 5. Add OpenCV to your project using the `uv add` command:
-   > `uv add opencv-python
+   > `uv add opencv-python`
 6. Have the dependencies in the `pyproject.toml` changed? If so, how?
    > dependencies now show open cv
 7. Why did we use `uv add` over `uv pip`?
-   > uv add locks dependencies across platform to specific library versions whereas uv pip while try to use
-   > the latest version of packages https://github.com/astral-sh/uv/issues/9219
+   > uv add locks dependencies across platform to specific library versions whereas uv pip will try to use
+   > install the latest version of package https://github.com/astral-sh/uv/issues/9219
 8. The `numpy` library is required for OpenCV. Should you add an explicit requirement for it? Why/Why not?
    > I think not, seeing as if you add OpenCV it should install itself
 9. Commit the changes so far to git. Use the message `chore: add OpenCV dependency`
@@ -107,5 +107,14 @@ FastAPI will allow us to enable communication with our OCR service from other pr
    > uvicorn is the fastapi server that we're hosting/communicating with through curl.
 7. Modify the simple_api.py so that it works correctly with your implementation and complete any TODO markers
 8. Demonstrate the use of at least two other end points below:
+
    > curl 127.0.0.1:8000/video/demo
    > {"fps":23.976023976023978,"frame_count":15152,"duration_seconds":631.9646666666666}
+
+   > $ curl -o frame.png 127.0.0.1:8000/video/demo/frame/1.0
+   > % Total % Received % Xferd Average Speed Time Time Time Current
+   > Dload Upload Total Spent Left Speed
+   > 100 875k 100 875k 0 0 8759k 0 --:--:-- --:--:-- --:--:-- 8841k
+
+   > $ curl 127.0.0.1:8000/video/demo/frame/42/ocr
+   > {"text":"I finally saw The Matrix today.\nIt was the best documentary\nI've ever seen."}
