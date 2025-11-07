@@ -33,21 +33,6 @@ export default function Home() {
                     </li>
                 ))}
             </ul>
-
-            {/* not for prod, just for testing */}
-            {selected && (
-                <section style={{ marginTop: 16 }}>
-                    <h2>Selected</h2>
-                    <p>
-                        <strong>{selected.title}</strong>
-                        <br />
-                        Video Selected: {selected.topic}
-                        <br />
-                        ID: {selected.id}
-                    </p>
-                </section>
-            )}
-
             {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
     );

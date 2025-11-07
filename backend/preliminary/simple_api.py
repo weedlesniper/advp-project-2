@@ -4,13 +4,14 @@ Drive the API to complete "interprocess communication"
 
 Requirements
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi import Response
 from pydantic import BaseModel
 from pathlib import Path
 from library_basics import CodingVideo
 from fastapi.middleware.cors import CORSMiddleware
-
+from starlette.responses import FileResponse
+from fastapi.responses import StreamingResponse
 
 app = FastAPI()
 app.add_middleware(
@@ -118,3 +119,12 @@ def video_frame_ocr(vid: str, t: float):
         except Exception:
             pass
 
+
+@app.get("/video/{vid}/file")
+def video_file(vid: str):
+    path = VIDEOS.get(vid)
+    if not path or not path.is_file():
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    response = FileResponse(path, media_type="video/mp4")
+    return response

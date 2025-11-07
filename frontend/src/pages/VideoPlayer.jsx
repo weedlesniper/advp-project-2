@@ -7,6 +7,7 @@ const API = "http://127.0.0.1:8000";
 export default function VideoPlayer() {
     //get id from router path
     const { id } = useParams();
+    const url = `${API}/video/${encodeURIComponent(id)}/file`;
 
     // variable to set video metadata we get from api
     const [meta, setMeta] = useState(null)
@@ -38,21 +39,9 @@ export default function VideoPlayer() {
     return (
         <div>
             <h1>Video: {id}</h1>
-
-            <ul>
-                <li><strong>FPS:</strong> {meta.fps}</li>
-                <li><strong>Frame count:</strong> {meta.frame_count}</li>
-                <li><strong>Duration (s):</strong> {meta.duration_seconds.toFixed(2)}</li>
-            </ul>
-
-            {meta._links && (
-                <>
-                    <h3>Links</h3>
-                    <pre style={{ background: "#f7f7f7", padding: 12, borderRadius: 8 }}>
-                        {JSON.stringify(meta._links, null, 2)}
-                    </pre>
-                </>
-            )}
+            <div>
+                <video src={`${API}/video/${id}/file`} controls width="800" />
+            </div>
         </div>
     );
 }
