@@ -13,10 +13,10 @@ import VideoPlayer from "./pages/VideoPlayer.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,              // layout
+    element: <App />,                             // layout
     children: [
       { index: true, element: <Home /> },          // "/"
-      { path: "videos", element: <VideoPlayer /> },// "/videos"
+      { path: "videos/:id", element: <VideoPlayer /> }, //path for a specific video selected
       { path: "about", element: <About /> },       // "/about"
       { path: "*", element: <h1>404 Not Found</h1> },
     ],
