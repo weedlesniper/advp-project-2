@@ -51,3 +51,25 @@
 .list-item:hover {
   background: #f5f5f5;
 }
+
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* video | text */
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.player__video video {
+  display: block;   /* removes inline gap, lets width fill container */
+  width: 50%;      /* fill the grid column */
+  height: auto;
+}
+
+.player__text {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fafafa;
+}
+
+

@@ -14,13 +14,44 @@ export default function VideoPlayer() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
     const videoRef = useRef(null);
     const [pausedAtTime, setPausedAtTime] = useState(0);
+
+    //ocr result loading variables
+    const [ocrResult, setOCRResult] = useState("");
+    const [ocrError, setOcrError] = useState("");
+    const [ocrLoading, setOcrLoading] = useState(false);
+
 
     const handlePause = () => {
         const t = videoRef.current?.currentTime ?? 0;
         setPausedAtTime(t);
         console.log('Video paused at:', t, 'seconds');
+    };
+
+    const handleRequestOCR = async () => {
+        setOcrError("");
+        setOCRResult("");
+        const t = Math.floor(videoRef.current?.currentTime ?? pausedAtTime ?? 0);
+        if (!id || t < 0) {
+            setOcrError("Pause the video first to capture a timestamp.");
+            return;
+        }
+        setOcrLoading(true);
+        try {
+            const res = await fetch(
+                `${API}/video/${encodeURIComponent(id)}/frame/${t}/ocr`,
+                { headers: { accept: "application/json" } }
+            );
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            setOCRResult(data.text ?? JSON.stringify(data));
+        } catch (e) {
+            setOcrError("OCR request failed.");
+        } finally {
+            setOcrLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -47,17 +78,28 @@ export default function VideoPlayer() {
     return (
         <div>
             <h1>Video: {id}</h1>
-            <div>
-                <video
-                    ref={videoRef}
-                    src={`${API}/video/${id}/file`}
-                    controls
-                    onPause={handlePause}
-                    style={{ maxWidth: '100%' }}
-                />
-                <p>
-                    {pausedAtTime !== null && `Paused at time ${pausedAtTime}`}
-                </p>
+            <div className="main-container">
+                <div className="player__video">
+                    <video
+                        ref={videoRef}
+                        src={`${API}/video/${id}/file`}
+                        controls
+                        onPause={handlePause}
+                    />
+                </div>
+                <div className="player__text">
+                    <h2>Notes</h2>
+
+                    {pausedAtTime != null && <p>Paused at {Math.floor(pausedAtTime)}s</p>}
+
+                    <button onClick={handleRequestOCR} disabled={ocrLoading || pausedAtTime == null}>
+                        {ocrLoading ? "Running OCR…" : "Run OCR at paused time"}
+                    </button>
+
+                    {ocrError && <p style={{ color: "red" }}>{ocrError}</p>}
+                    {ocrResult && <pre>{ocrResult}</pre>}
+
+                </div>
             </div>
 
 
