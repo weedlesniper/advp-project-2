@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 
 const API = "http://127.0.0.1:8000";
@@ -14,6 +14,14 @@ export default function VideoPlayer() {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const videoRef = useRef(null);
+    const [pausedAtTime, setPausedAtTime] = useState(0);
+
+    const handlePause = () => {
+        const t = videoRef.current?.currentTime ?? 0;
+        setPausedAtTime(t);
+        console.log('Video paused at:', t, 'seconds');
+    };
 
     useEffect(() => {
         let alive = true;
@@ -40,8 +48,20 @@ export default function VideoPlayer() {
         <div>
             <h1>Video: {id}</h1>
             <div>
-                <video src={`${API}/video/${id}/file`} controls width="800" />
+                <video
+                    ref={videoRef}
+                    src={`${API}/video/${id}/file`}
+                    controls
+                    onPause={handlePause}
+                    style={{ maxWidth: '100%' }}
+                />
+                <p>
+                    {pausedAtTime !== null && `Paused at time ${pausedAtTime}`}
+                </p>
             </div>
+
+
         </div>
     );
 }
+
