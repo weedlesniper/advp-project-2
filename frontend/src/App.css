@@ -59,17 +59,26 @@
   align-items: start;
 }
 
-.player__video video {
+.player-video video {
   display: block;   /* removes inline gap, lets width fill container */
-  width: 50%;      /* fill the grid column */
+  width: 100%;      /* fill the grid column */
   height: auto;
 }
+.page-heading{
+  text-align: left;
+  font-size:x-large;
+}
 
-.player__text {
+.player-text {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 1rem;
   background: #fafafa;
 }
 
+.vertical-container{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 

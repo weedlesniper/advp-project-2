@@ -1,14 +1,22 @@
 import { Outlet, NavLink } from "react-router-dom";
 import "./App.css";
 
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+
 export default function App() {
   return (
+    
     <div>
-      <nav style={{ display: "flex", gap: 12, padding: 12 }}>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/about">About the Project</NavLink>
-      </nav>
-      <main style={{ padding: 12 }}>
+      <Navbar bg="dark" data-bs-theme="dark">
+          <Navbar.Brand to="/">&lt;OCROO/&gt;</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
+          </Nav>
+      </Navbar>
+      <main style={{ padding: 20 }}>
         <Outlet /> {/* child routes render here */}
       </main>
     </div>

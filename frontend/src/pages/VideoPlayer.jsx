@@ -77,9 +77,9 @@ export default function VideoPlayer() {
 
     return (
         <div>
-            <h1>Video: {id}</h1>
+            <h1 className="page-heading">Video Title: {id}</h1>
             <div className="main-container">
-                <div className="player__video">
+                <div className="player-video">
                     <video
                         ref={videoRef}
                         src={`${API}/video/${id}/file`}
@@ -87,8 +87,8 @@ export default function VideoPlayer() {
                         onPause={handlePause}
                     />
                 </div>
-                <div className="player__text">
-                    <h2>Notes</h2>
+                <div className="player-text">
+                    <h2>OCR Results</h2>
 
                     {pausedAtTime != null && <p>Paused at {Math.floor(pausedAtTime)}s</p>}
 

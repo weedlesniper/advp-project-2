@@ -1,10 +1,7 @@
 # Overview
+This project provides an accessible learning tool designed to support students with visual impairments—specifically those who use screen readers such as JAWS—when studying software development. Traditional coding tutorial videos present a significant barrier to accessibility, as critical on-screen information is visual-only. This tool addresses that gap.
 
-Include a brief overview of the project, include:
-
-- How do you deploy and run the project?
-- What are its core dependencies?
-- Who is it for and why?
+The system allows a student to pause a coding tutorial video and automatically generate screen-reader-friendly text derived from the paused frame using OCR [Optical Character Recognition](https://en.wikipedia.org/wiki/Optical_character_recognition). Code, UI elements, and on-screen actions are converted into text that can be read aloud by assistive technology.
 
 ```bash
 python -m venv .venv

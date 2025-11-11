@@ -21,7 +21,7 @@ export default function Home() {
 
     return (
         <div>
-            <h1>Select a video from the list to begin...</h1>
+            <h1 className="page-heading">Select a video from the list to begin...</h1>
 
             <ul style={{ padding: 0 }}>
                 {videos.map((v) => (
