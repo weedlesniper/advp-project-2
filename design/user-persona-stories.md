@@ -36,6 +36,6 @@ In the context of his study, he wants to be able to study the same course conten
 **I want** to pause a coding tutorial video and get screen-reader-ready OCR/alt-text of the current frame. 
 **So that** I can understand on-screen code and video context better, or in other words, use video resources that my class mates are using to help them understand in class concepts.
 
-keyboard traversal
+TODO: keyboard traversal user story
 
-choosing own video
+TODO: choosing own video rather than server user story
