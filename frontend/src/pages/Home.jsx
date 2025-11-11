@@ -26,9 +26,13 @@ export default function Home() {
             <ul style={{ padding: 0 }}>
                 {videos.map((v) => (
                     <li key={v.id} style={{ marginBottom: 8, listStyle: "none" }}>
-                        <button className="list-item"
-                            onClick={() => navigate(`/videos/${v.id}`, { state: v })}>
-                            {v.id}
+                        <button
+                            className="list-item"
+                            onClick={() => navigate(`/videos/${v.id}`, { state: v })}
+                            style={{ display: "block", textAlign: "left", width: "100%" }}
+                        >
+                            <div><strong>Title:</strong> {v.id}</div>
+                            <div><strong>Description:</strong> {v.description ?? "No description provided."}</div>
                         </button>
                     </li>
                 ))}

@@ -11,7 +11,6 @@ from pathlib import Path
 from library_basics import CodingVideo
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from fastapi.responses import StreamingResponse
 
 app = FastAPI()
 app.add_middleware(
@@ -34,10 +33,17 @@ VIDEOS: dict[str, Path] = {
     "demo2": RESOURCES / "oop2.mp4"               # .../resources/oop.mp4
 }
 
+DESCRIPTIONS = {
+    "demo": "OOP tutorial — classes & methods",
+    "demo2": "OOP tutorial — inheritance & polymorphism",
+}
+
+
 class VideoMetaData(BaseModel):
     fps: float
     frame_count: int
     duration_seconds: float
+    description: str | None = None
     _links: dict | None = None
 
 @app.get("/video")
@@ -49,6 +55,7 @@ def list_videos():
             {
                 "id": vid,
                 "path": str(path), # Not standard for debug only
+                "description": DESCRIPTIONS.get(vid),
                 "_links": {
                     "self": f"/video/{vid}",
                     "frame_example": f"/video/{vid}/frame/1.0"
