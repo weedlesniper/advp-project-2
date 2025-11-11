@@ -59,11 +59,11 @@ You will validate your design by meeting with a user representative: the product
 
 ##### Meeting minutes
 
-- [ ] Meeting held on [4/11]
+- [ ] Meeting held on [11/11]
 - [ ] Persona discussed: [John Park]
-- [x] Design artefacts reviewed: [wireframes]
+- [x] Design artefacts reviewed: [initial prototype] 4349c7d2f50b42c7954c3aef840ce841f1e5fd26
 - [x] Issues discussed: [keyboard shortcuts, not discoverable]
-- [ ] Feedback provided: [scope too big, narrow to MVP, select file from serverside ]
+- [ ] Feedback provided: [MVP good, in home add video descriptions, more precise timestamping]
 
 ##### What worked well
 
@@ -71,13 +71,12 @@ You will validate your design by meeting with a user representative: the product
 
 ##### What could be improved
 
-- [ ] [list of things that could be improved]
+- [mentioned previously ] [list of things that could be improved]
 
 ##### What will you change before the next meeting
 
-- [coded prototype, more fleshed out persona and user stories
-   user journey should reflect MVP
- ] [list of things that will be changed before the next meeting] (no commitment to complete this)
+- [add the shortcuts, and video description] (no commitment to complete this)
+ideas: copy to clipboard
 
 ##### Were there any questions that needed to be discussed with the user
 
@@ -85,12 +84,12 @@ You will validate your design by meeting with a user representative: the product
 
 #### Lecturer's checklist (to be used by the lecturer)
 
-- [-] Persona is well defined
+- [x] Persona is well defined
 - [x] Persona is relevant to the application
-- [-] Design artifacts are present and easy to follow
+- [x] Design artifacts are present and easy to follow
 - [x] Design decisions are based on user needs and goals
 - [x] Appropriate considerations of interaction patterns appropriate for the user
-- [n/a] Efforts towards realizing at least one significant issue involving user interaction
+- [x] Efforts towards realizing at least one significant issue involving user interaction
 - [x] Whole team engagement in the design process
 
 
