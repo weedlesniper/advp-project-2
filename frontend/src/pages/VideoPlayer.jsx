@@ -1,74 +1,91 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+import useShortcuts from "../hooks/useShortcuts";
+
 
 const API = "http://127.0.0.1:8000";
 
-
 export default function VideoPlayer() {
-    //get id from router path
     const { id } = useParams();
     const url = `${API}/video/${encodeURIComponent(id)}/file`;
 
-    // variable to set video metadata we get from api
-    const [meta, setMeta] = useState(null)
-
+    const [meta, setMeta] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     const videoRef = useRef(null);
     const [pausedAtTime, setPausedAtTime] = useState(0);
 
-    //ocr result loading variables
     const [ocrResult, setOCRResult] = useState("");
     const [ocrError, setOcrError] = useState("");
     const [ocrLoading, setOcrLoading] = useState(false);
 
-
-    const handlePause = () => {
+    const handlePause = useCallback(() => {
         const t = videoRef.current?.currentTime ?? 0;
         setPausedAtTime(t);
-        console.log('Video paused at:', t, 'seconds');
-    };
+        console.log("Video paused at:", t, "seconds");
+    }, []);
 
-    const handleRequestOCR = async () => {
+    const runOcrAt = useCallback(async (videoId, t) => {
         setOcrError("");
         setOCRResult("");
-        const t = Math.floor(videoRef.current?.currentTime ?? pausedAtTime ?? 0);
-        if (!id || t < 0) {
+
+        if (!videoId || t < 0) {
             setOcrError("Pause the video first to capture a timestamp.");
             return;
         }
         setOcrLoading(true);
         try {
-            const res = await fetch(
-                `${API}/video/${encodeURIComponent(id)}/frame/${t}/ocr`,
+            const response = await fetch(
+                `${API}/video/${encodeURIComponent(videoId)}/frame/${Math.floor(t)}/ocr`,
                 { headers: { accept: "application/json" } }
             );
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
             setOCRResult(data.text ?? JSON.stringify(data));
         } catch (e) {
             setOcrError("OCR request failed.");
         } finally {
             setOcrLoading(false);
         }
-    };
+    }, []);
+
+    // One action for both the shortcut and the button
+    const handlePauseAndOCR = useCallback(async () => {
+        const el = videoRef.current;
+        if (!el) return;
+
+        el.pause(); // ensure paused
+        const t = el.currentTime ?? 0;
+        setPausedAtTime(t);
+
+        await runOcrAt(id, t);
+    }, [id, runOcrAt]);
+
+    // Ctrl+O hotkey
+    useShortcuts("ctrl+o", handlePauseAndOCR);
 
     useEffect(() => {
         let alive = true;
         setLoading(true);
         setError("");
-
         fetch(`${API}/video/${encodeURIComponent(id)}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return response.json();
+            .then((r) => {
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                return r.json();
             })
-            .then(data => { if (alive) setMeta(data); })
-            .catch(() => { if (alive) setError("Could not load video metadata."); })
-            .finally(() => { if (alive) setLoading(false); });
-        return () => { alive = false };
-
+            .then((data) => {
+                if (alive) setMeta(data);
+            })
+            .catch(() => {
+                if (alive) setError("Could not load video metadata.");
+            })
+            .finally(() => {
+                if (alive) setLoading(false);
+            });
+        return () => {
+            alive = false;
+        };
     }, [id]);
 
     if (loading) return <p>Loading…</p>;
@@ -82,9 +99,9 @@ export default function VideoPlayer() {
                 <div className="player-video">
                     <video
                         ref={videoRef}
-                        src={`${API}/video/${id}/file`}
+                        src={url}
                         controls
-                        onPause={handlePause}
+                        onPause={handlePause} // still updates the "Paused at" line when user clicks pause
                     />
                 </div>
                 <div className="player-text">
@@ -92,18 +109,14 @@ export default function VideoPlayer() {
 
                     {pausedAtTime != null && <p>Paused at {Math.floor(pausedAtTime)}s</p>}
 
-                    <button onClick={handleRequestOCR} disabled={ocrLoading || pausedAtTime == null}>
-                        {ocrLoading ? "Running OCR…" : "Run OCR at paused time"}
+                    <button onClick={handlePauseAndOCR} disabled={ocrLoading}>
+                        {ocrLoading ? "Running OCR…" : "Pause + OCR (Ctrl+O)"}
                     </button>
 
                     {ocrError && <p style={{ color: "red" }}>{ocrError}</p>}
                     {ocrResult && <pre>{ocrResult}</pre>}
-
                 </div>
             </div>
-
-
         </div>
     );
 }
-

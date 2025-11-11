@@ -46,6 +46,7 @@
   cursor: pointer;
   background: white;
   color: black;
+  display: "block";
 }
 
 .list-item:hover {
