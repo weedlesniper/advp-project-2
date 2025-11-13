@@ -20,6 +20,8 @@ export default function VideoPlayer() {
     const [ocrError, setOcrError] = useState("");
     const [ocrLoading, setOcrLoading] = useState(false);
 
+    const [showShortcuts, setShowShortcuts] = useState(true);
+
     const togglePause = useCallback(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -74,9 +76,37 @@ export default function VideoPlayer() {
         await runOcrAt(id, t);
     }, [id, runOcrAt]);
 
+    const seekBy = useCallback((deltaSeconds) => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const current = video.currentTime ?? 0;
+        const duration = Number.isFinite(video.duration) ? video.duration : current;
+
+        //check to see we don't go before start / past end 
+        const next = Math.min(Math.max(current + deltaSeconds, 0), duration);
+
+        video.currentTime = next;
+
+        // If the video is currently paused, keep the pausedat display in sync
+        if (video.paused) {
+            setPausedAtTime(next);
+        }
+    }, []);
+
+    const scrubBackward = useCallback(() => {
+        seekBy(-5); // back 5 seconds
+    }, [seekBy]);
+
+    const scrubForward = useCallback(() => {
+        seekBy(5); // forward 5 seconds
+    }, [seekBy]);
+
     // Ctrl+O hotkey
     useShortcuts("ctrl+o", handlePauseAndOCR);
     useShortcuts("space", togglePause, []);
+    useShortcuts("shift+left", scrubBackward, [scrubBackward]);
+    useShortcuts("shift+right", scrubForward, [scrubForward]);
 
     useEffect(() => {
         let alive = true;
@@ -109,20 +139,57 @@ export default function VideoPlayer() {
         <div>
             <h1 className="page-heading">Video Title: {id}</h1>
             <div className="main-container">
-                <div className="player-video">
-                    <video
-                        ref={videoRef}
-                        src={url}
-                        controls
-                        onPause={handlePause} // still updates the "Paused at" line when user clicks pause
-                    />
+                <div>
+                    <div className="player-video">
+                        <video
+                            ref={videoRef}
+                            src={url}
+                            controls
+                            onPause={handlePause} // still updates the paused at line regardless of which was video was paused
+                        />
+                    </div>
+                    <div
+                        className="shortcut-panel"
+                        role="region"
+                        aria-labelledby="shortcut-heading"
+                    >
+                        <div className="shortcut-panel-header">
+                            <button
+                                type="button"
+                                className="shortcut-toggle"
+                                onClick={() => setShowShortcuts((prev) => !prev)}
+                                aria-expanded={showShortcuts}
+                                aria-controls="shortcut-list"
+                            >
+                                {showShortcuts ? "Hide shortcuts" : "Show shortcuts"}
+                            </button>
+                        </div>
+
+                        {showShortcuts && (
+                            <ul id="shortcut-list" className="shortcut-list">
+                                <li>
+                                    <kbd>Space</kbd> Play / pause
+                                </li>
+                                <li>
+                                    <kbd>Ctrl</kbd> + <kbd>O</kbd> Pause + OCR
+                                </li>
+                                <li>
+                                    <kbd>Shift</kbd> + <kbd>Left</kbd> Scrub Backwards 5s
+                                </li>
+                                <li>
+                                    <kbd>Shift</kbd> + <kbd>Right</kbd> Scrub Forwards 5s
+                                </li>
+                            </ul>
+                        )}
+                    </div>
+
                 </div>
                 <div className="player-text">
                     <h2>OCR Results</h2>
 
                     {pausedAtTime != null && <p>Paused at {Math.floor(pausedAtTime)}s</p>}
 
-                    <button onClick={handlePauseAndOCR} disabled={ocrLoading}>
+                    <button className="ocr-button" onClick={handlePauseAndOCR} disabled={ocrLoading}>
                         {ocrLoading ? "Running OCR…" : "Pause + OCR (Ctrl+O)"}
                     </button>
 
