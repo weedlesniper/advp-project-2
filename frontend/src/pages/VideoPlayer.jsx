@@ -20,6 +20,16 @@ export default function VideoPlayer() {
     const [ocrError, setOcrError] = useState("");
     const [ocrLoading, setOcrLoading] = useState(false);
 
+    const togglePause = useCallback(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused || video.ended) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    }, []);
+
     const handlePause = useCallback(() => {
         const t = videoRef.current?.currentTime ?? 0;
         setPausedAtTime(t);
@@ -50,13 +60,15 @@ export default function VideoPlayer() {
         }
     }, []);
 
-    // One action for both the shortcut and the button
+    // this could potentially be reworked, thinking of the user actually interacting with the 
+    // app, they would likely prefer to pause, think on something then ocr, rather than 
+    // pause and ocr in one motion. 
     const handlePauseAndOCR = useCallback(async () => {
-        const el = videoRef.current;
-        if (!el) return;
+        const video = videoRef.current;
+        if (!video) return;
 
-        el.pause(); // ensure paused
-        const t = el.currentTime ?? 0;
+        video.pause(); // ensure paused
+        const t = video.currentTime ?? 0;
         setPausedAtTime(t);
 
         await runOcrAt(id, t);
@@ -64,6 +76,7 @@ export default function VideoPlayer() {
 
     // Ctrl+O hotkey
     useShortcuts("ctrl+o", handlePauseAndOCR);
+    useShortcuts("space", togglePause, []);
 
     useEffect(() => {
         let alive = true;
