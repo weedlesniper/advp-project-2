@@ -9,11 +9,17 @@ The system allows a student to pause a coding tutorial video and automatically g
 See the [Contributions Guide](./CONTRIBUTIONS.md) for how to get involved.
 
 # Pre-requisites
-To successfully build and run the project, ensure that you have the following installed.
-- Tesseract executable 
-  - Windows - https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe 
-- NodeJS
-  - https://nodejs.org/en/download
+To successfully build and run the project, ensure that you have the following installed. 
+### Tesseract executable 
+Tesseract is an open source text recognition (OCR) Engine.
+This is used to extract the text that is on screen and being played in the video.
+
+It can be downloaded at:
+- Windows - https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe
+
+### NodeJS
+Node is required to run npm and build the front end.
+It can be downloaded at https://nodejs.org/en/download
 
 
 ## Installation Backend
@@ -52,6 +58,9 @@ http://localhost:5173/) and it will open up a tab in your default browser (eg Go
 Ensure that you have the pre-requisites highlighted above before commencing. 
 The Windows installer for Tesseract can be found at https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe 
 and NodeJS at https://nodejs.org/dist/v24.11.1/node-v24.11.1-x64.msi
+
+Ensure that Tesseract is installed at the following location: C:\Program Files\Tesseract-OCR\tesseract.exe. 
+Otherwise, you will need to change the value of pytesseract.pytesseract.tesseract_cmd location found library_basics.py in order to work.
 
 Open up a terminal, and run the following commands.
 
