@@ -107,3 +107,15 @@ see that NodeJS has been installed.
 - When trying to build the backend, and one of the last outputs is Tessaract not found, check to see
 that it has been installed (see install links) at the same location as highlighted in library_basics.py.
 Issues with Tesseract can also be seen when trying to run the OCR in the application.
+
+
+## Running the unit tests
+We are using the unittest framework for testing.
+There are a few things you need to setup in your IDE before the tests will run successfully.
+
+### Step 1 - Setting the backend as Sources Root
+So that the IDE picks up the correct package, right click on the ```Backend``` folder and Mark Directory as Sources Root
+### Step 2 - Use the correct interpreter
+You'll notice that there are 2 venvs in this project. We need to use the one in the ```Backend``` folder instead.
+If it throws an error indicating things like module cv not found, but you are able to build the project successfully, you're likely using the wrong interpreter.
+Make sure that it is pointed to the ocrroo-advp-project/backend/.venv/Scripts/python.exe.
