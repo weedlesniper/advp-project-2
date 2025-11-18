@@ -22,6 +22,10 @@ export default function VideoPlayer() {
 
     const [showShortcuts, setShowShortcuts] = useState(true);
 
+    const toggleShortcuts = useCallback(() => {
+        setShowShortcuts(prev => !prev);
+    }, []);
+
     const togglePause = useCallback(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -107,6 +111,8 @@ export default function VideoPlayer() {
     useShortcuts("space", togglePause, []);
     useShortcuts("shift+left", scrubBackward, [scrubBackward]);
     useShortcuts("shift+right", scrubForward, [scrubForward]);
+    useShortcuts("ctrl+h", toggleShortcuts, [])
+
 
     useEffect(() => {
         let alive = true;
@@ -161,7 +167,7 @@ export default function VideoPlayer() {
                                 aria-expanded={showShortcuts}
                                 aria-controls="shortcut-list"
                             >
-                                {showShortcuts ? "Hide shortcuts" : "Show shortcuts"}
+                                {showShortcuts ? "Hide shortcuts (Ctrl + H)" : "Show shortcuts (Ctrl + H)"}
                             </button>
                         </div>
 
@@ -187,7 +193,7 @@ export default function VideoPlayer() {
                 <div className="player-text">
                     <h2>OCR Results</h2>
 
-                    {pausedAtTime != null && <p>Paused at {Math.floor(pausedAtTime)}s</p>}
+                    {pausedAtTime != null && <p>Paused at {Math.round(pausedAtTime)}s</p>}
 
                     <button className="ocr-button" onClick={handlePauseAndOCR} disabled={ocrLoading}>
                         {ocrLoading ? "Running OCR…" : "Pause + OCR (Ctrl+O)"}
