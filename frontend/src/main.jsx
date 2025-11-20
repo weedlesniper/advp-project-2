@@ -12,7 +12,7 @@ import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import VideoPlayer from "./pages/VideoPlayer.jsx";
-
+import Settings from "./pages/Settings.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +21,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },          // "/"
       { path: "videos/:id", element: <VideoPlayer /> }, //path for a specific video selected
       { path: "about", element: <About /> },       // "/about"
+      { path: "settings", element: <Settings /> },
       { path: "*", element: <h1>404 Not Found</h1> },
     ],
   },
