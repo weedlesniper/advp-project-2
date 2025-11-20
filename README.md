@@ -112,10 +112,21 @@ Issues with Tesseract can also be seen when trying to run the OCR in the applica
 ## Running the unit tests
 We are using the unittest framework for testing.
 There are a few things you need to setup in your IDE before the tests will run successfully.
-
+ 
+## Using Pycharm
 ### Step 1 - Setting the backend as Sources Root
 So that the IDE picks up the correct package, right click on the ```Backend``` folder and Mark Directory as Sources Root
+
 ### Step 2 - Use the correct interpreter
 You'll notice that there are 2 venvs in this project. We need to use the one in the ```Backend``` folder instead.
 If it throws an error indicating things like module cv not found, but you are able to build the project successfully, you're likely using the wrong interpreter.
 Make sure that it is pointed to the ocrroo-advp-project/backend/.venv/Scripts/python.exe.
+
+To do so
+1) Click on the right hand corner of Pycharm. You should see Python 3.x (where x is the version number). Doing so should bring up a Python Interpreter list. 
+2) Select Add New Interpreter -> Add Local Interpreter
+3) You should see options to select Existing or New environments. Select the Radio button for Existing, and ensure you've still selected Virtualenv Environment on the left hand menu.
+4) Where it asks for Interpreter, click on the menu box, navigate to the project folder, and then select the venv folder nested in the backend folder, then Scripts and finally select python.exe
+5) The folder path should look like .\ocrroo-advp-project\backend\.venv\Scripts\python.exe. If so, click ok, and try running the tests.
+
+<!-- TODO: Add steps for other IDES such as VSCode-->
