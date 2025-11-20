@@ -15,7 +15,9 @@ const DEFAULT_SHORTCUTS = {
     toggleList: "ctrl+h",
     copyToClipboard: "ctrl + shift + c",
 };
-
+//retrieves shortcuts stored in local browser storage (see inspect -> storage -> localstorage on firefox)
+// if no customisations have been made, or there is an error, just use defaults. 
+// ... is merging the customised shortcuts with the existing defaults, if not all were modified. 
 function loadShortcuts() {
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -45,6 +47,7 @@ export default function VideoPlayer() {
 
     //actual shortcut values
     const [shortcuts] = useState(loadShortcuts);
+
     //show state of shortcut component
     const [showShortcuts, setShowShortcuts] = useState(true);
 
@@ -138,7 +141,7 @@ export default function VideoPlayer() {
 
         video.currentTime = next;
 
-        // If the video is currently paused, keep the pausedat display in sync
+        // if the video is currently paused, keep the pausedat display in sync
         if (video.paused) {
             setPausedAtTime(next);
         }
