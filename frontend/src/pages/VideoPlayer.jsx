@@ -5,6 +5,27 @@ import useShortcuts from "../hooks/useShortcuts";
 
 const API = "http://127.0.0.1:8000";
 
+const STORAGE_KEY = "ocr_shortcuts_v1";
+
+const DEFAULT_SHORTCUTS = {
+    playPause: "space",
+    pauseOcr: "ctrl+o",
+    scrubForward: "shift+right",
+    scrubBackward: "shift+left",
+    toggleList: "ctrl+h",
+};
+
+function loadShortcuts() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved
+            ? { ...DEFAULT_SHORTCUTS, ...JSON.parse(saved) }
+            : DEFAULT_SHORTCUTS;
+    } catch {
+        return DEFAULT_SHORTCUTS;
+    }
+}
+
 export default function VideoPlayer() {
     const { id } = useParams();
     const url = `${API}/video/${encodeURIComponent(id)}/file`;
@@ -19,7 +40,9 @@ export default function VideoPlayer() {
     const [ocrResult, setOCRResult] = useState("");
     const [ocrError, setOcrError] = useState("");
     const [ocrLoading, setOcrLoading] = useState(false);
-
+    //actual shortcut values
+    const [shortcuts] = useState(loadShortcuts);
+    //show state of shortcut component
     const [showShortcuts, setShowShortcuts] = useState(true);
 
     const toggleShortcuts = useCallback(() => {
@@ -107,11 +130,11 @@ export default function VideoPlayer() {
     }, [seekBy]);
 
     // Ctrl+O hotkey
-    useShortcuts("ctrl+o", handlePauseAndOCR);
-    useShortcuts("space", togglePause, []);
-    useShortcuts("shift+left", scrubBackward, [scrubBackward]);
-    useShortcuts("shift+right", scrubForward, [scrubForward]);
-    useShortcuts("ctrl+h", toggleShortcuts, [])
+    useShortcuts(shortcuts.pauseOcr, handlePauseAndOCR, [handlePauseAndOCR]);
+    useShortcuts(shortcuts.playPause, togglePause, [togglePause]);
+    useShortcuts(shortcuts.scrubBackward, scrubBackward, [scrubBackward]);
+    useShortcuts(shortcuts.scrubForward, scrubForward, [scrubForward]);
+    useShortcuts(shortcuts.toggleList, toggleShortcuts, [toggleShortcuts]);
 
 
     useEffect(() => {
@@ -163,27 +186,28 @@ export default function VideoPlayer() {
                             <button
                                 type="button"
                                 className="shortcut-toggle"
-                                onClick={() => setShowShortcuts((prev) => !prev)}
+                                onClick={() => setShowShortcuts(prev => !prev)}
                                 aria-expanded={showShortcuts}
                                 aria-controls="shortcut-list"
                             >
-                                {showShortcuts ? "Hide shortcuts (Ctrl + H)" : "Show shortcuts (Ctrl + H)"}
+                                {showShortcuts ? "Hide shortcuts " : "Show shortcuts "}
+                                {(shortcuts.toggleList).toUpperCase()}
                             </button>
                         </div>
 
                         {showShortcuts && (
                             <ul id="shortcut-list" className="shortcut-list">
                                 <li>
-                                    <kbd>Space</kbd> Play / pause
+                                    <kbd>{(shortcuts.playPause).toUpperCase()}</kbd> Play / pause
                                 </li>
                                 <li>
-                                    <kbd>Ctrl</kbd> + <kbd>O</kbd> Pause + OCR
+                                    <kbd>{(shortcuts.pauseOcr).toUpperCase()}</kbd> Pause + OCR
                                 </li>
                                 <li>
-                                    <kbd>Shift</kbd> + <kbd>Left</kbd> Scrub Backwards 5s
+                                    <kbd>{(shortcuts.scrubBackward).toUpperCase()}</kbd> Scrub Backwards 5s
                                 </li>
                                 <li>
-                                    <kbd>Shift</kbd> + <kbd>Right</kbd> Scrub Forwards 5s
+                                    <kbd>{(shortcuts.scrubForward).toUpperCase()}</kbd> Scrub Forwards 5s
                                 </li>
                             </ul>
                         )}
