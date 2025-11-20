@@ -13,6 +13,7 @@ const DEFAULT_SHORTCUTS = {
     scrubForward: "shift+right",
     scrubBackward: "shift+left",
     toggleList: "ctrl+h",
+    copyToClipboard: "ctrl + shift + c",
 };
 
 function loadShortcuts() {
@@ -40,6 +41,8 @@ export default function VideoPlayer() {
     const [ocrResult, setOCRResult] = useState("");
     const [ocrError, setOcrError] = useState("");
     const [ocrLoading, setOcrLoading] = useState(false);
+    const [copyLabel, setCopyLabel] = useState("Copy OCR to clipboard");
+
     //actual shortcut values
     const [shortcuts] = useState(loadShortcuts);
     //show state of shortcut component
@@ -58,6 +61,26 @@ export default function VideoPlayer() {
             video.pause();
         }
     }, []);
+
+    const handleCopyOcr = useCallback(async () => {
+        if (!ocrResult) return;
+
+        const pausedDisplay = pausedAtTime != null
+            ? `  ${Math.round(pausedAtTime)}s`
+            : "";
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+                await navigator.clipboard.writeText(ocrResult);
+                setCopyLabel(`Text copied from ${pausedDisplay}`);
+            } catch (err) {
+                setOcrError("Failed to copy OCR text to clipboard.");
+            }
+            return;
+        }
+
+
+    }, [ocrResult, pausedAtTime]);
 
     const handlePause = useCallback(() => {
         const t = videoRef.current?.currentTime ?? 0;
@@ -135,7 +158,7 @@ export default function VideoPlayer() {
     useShortcuts(shortcuts.scrubBackward, scrubBackward, [scrubBackward]);
     useShortcuts(shortcuts.scrubForward, scrubForward, [scrubForward]);
     useShortcuts(shortcuts.toggleList, toggleShortcuts, [toggleShortcuts]);
-
+    useShortcuts(shortcuts.copyToClipboard, handleCopyOcr, [handleCopyOcr]);
 
     useEffect(() => {
         let alive = true;
@@ -209,6 +232,9 @@ export default function VideoPlayer() {
                                 <li>
                                     <kbd>{(shortcuts.scrubForward).toUpperCase()}</kbd> Scrub Forwards 5s
                                 </li>
+                                <li>
+                                    <kbd>{(shortcuts.copyToClipboard).toUpperCase()}</kbd> Copy OCR Result to Clipboard
+                                </li>
                             </ul>
                         )}
                     </div>
@@ -219,9 +245,20 @@ export default function VideoPlayer() {
 
                     {pausedAtTime != null && <p>Paused at {Math.round(pausedAtTime)}s</p>}
 
-                    <button className="ocr-button" onClick={handlePauseAndOCR} disabled={ocrLoading}>
-                        {ocrLoading ? "Running OCR…" : "Pause + OCR (Ctrl+O)"}
-                    </button>
+                    <div>
+                        <button className="primary-button" onClick={handlePauseAndOCR} disabled={ocrLoading}>
+                            {ocrLoading ? "Running OCR…" : "Pause + OCR"}
+                        </button>
+                        {/* https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API */}
+                        <button
+                            className="primary-button"
+                            onClick={handleCopyOcr}
+                            disabled={!ocrResult}
+                        >
+                            {copyLabel}
+                        </button>
+                    </div>
+
 
                     {ocrError && <p style={{ color: "red" }}>{ocrError}</p>}
                     {ocrResult && <pre>{ocrResult}</pre>}

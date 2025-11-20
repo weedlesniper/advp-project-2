@@ -5,7 +5,6 @@ import "../App.css";
 
 
 export default function Home() {
-    const [selected, setSelected] = useState(null);
     const [videos, setVideos] = useState([]);
     const [error, setError] = useState("");
 

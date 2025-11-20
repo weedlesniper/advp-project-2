@@ -9,6 +9,7 @@ const DEFAULT_SHORTCUTS = {
     scrubForward: "shift+right",
     scrubBackward: "shift+left",
     toggleList: "ctrl+h",
+    copyToClipboard: "ctrl + shift + c"
 };
 
 const WIN_PROTECTED_SHORTCUTS = new Set([
@@ -194,6 +195,18 @@ export default function Settings() {
                                 onClick={() => startCapture("toggleList")}
                             >
                                 {capturingAction === "toggleList" ? "Press keys..." : "Set Shortcut"}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><kbd>Copy OCR to Clipboard</kbd></td>
+                        <td><kbd>{shortcuts.copyToClipboard || DEFAULT_SHORTCUTS.copyToClipboard}</kbd></td>
+                        <td>
+                            <button
+                                type="button"
+                                onClick={() => startCapture("copyToClipboard")}
+                            >
+                                {capturingAction === "copyToClipboard" ? "Press keys..." : "Set Shortcut"}
                             </button>
                         </td>
                     </tr>
