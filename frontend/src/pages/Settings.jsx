@@ -12,6 +12,8 @@ const DEFAULT_SHORTCUTS = {
     copyToClipboard: "ctrl + shift + c"
 };
 
+// not sure how to disable, or if you even can, disable alt tab etc, 
+// but this works for ctrl p and ctrl s
 const WIN_PROTECTED_SHORTCUTS = new Set([
     "alt+tab",
     "alt+f4",
