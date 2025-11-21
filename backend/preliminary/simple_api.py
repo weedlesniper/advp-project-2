@@ -8,7 +8,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi import Response
 from pydantic import BaseModel
 from pathlib import Path
-from library_basics import CodingVideo
+from preliminary.library_basics import CodingVideo
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 
